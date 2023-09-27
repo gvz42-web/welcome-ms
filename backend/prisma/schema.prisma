@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model students {
+  student_id      Int                       @id @default(autoincrement()) @db.UnsignedInt
+  first_name      String                    @db.TinyText
+  last_name       String                    @db.TinyText
+  middle_name     String?                   @db.TinyText
+  birth_date      DateTime                  @db.Date
+  is_bfu_student  Boolean
+  education_level students_education_level?
+  group_name      String?                   @db.TinyText
+  year            Int?                      @db.TinyInt
+  phone_number    String                    @db.TinyText
+  peer_id         Int
+  created_at      DateTime                  @db.Timestamp(0)
+}
+
+enum students_education_level {
+  SPO
+  Spec
+  Bach
+  Mag
+  Asp
+}
