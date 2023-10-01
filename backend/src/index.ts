@@ -1,4 +1,4 @@
-import vk from "./services/vk";
+import {vk} from "./services/vk";
 import { PrismaClient } from "@prisma/client";
 
 export const prisma = new PrismaClient()

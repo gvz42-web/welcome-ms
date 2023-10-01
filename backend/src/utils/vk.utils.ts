@@ -17,7 +17,7 @@ function calculateAge(birthday: (Date|string)):number {
   return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
 
-function dateToFormatString(date: (Date|string)) {
+export function dateToFormatString(date: (Date|string)) {
   if (typeof date === "string") {
     date = new Date(date)
   }
@@ -25,7 +25,7 @@ function dateToFormatString(date: (Date|string)) {
 }
 
 export const profileView = (user:Prisma.studentsCreateInput):string => {
-  return `Ваша анкета:
+  return `🙍Ваша анкета:\n
 Имя: ${user.first_name}
 Фамилия: ${user.last_name}
 Отчество: ${user.middle_name ? user.middle_name : '-'}
@@ -33,7 +33,10 @@ export const profileView = (user:Prisma.studentsCreateInput):string => {
 ${user.is_bfu_student? 'Вы студент БФУ✅' : 'Вы не студент БФУ'}` +
     `${user.is_bfu_student? `\nУровень образования: ` + user.education_level: ''}` +
     `${user.is_bfu_student? `\nНаправление: ` + user.group_name: ''}` +
-    `${user.is_bfu_student? `\nКурс: ` + user.year: ''}`
+    `${user.is_bfu_student? `\nКурс: ` + user.year: ''}`+ '\n' +
+      `${user.is_foreign ? 'Вы иностранный гражданин🌍' : 'Вы гражданин РФ🇷🇺'}` + '\n' +
+      `📞Номер телефона: ${user.phone_number}`
+
 }
 
 export const translateEducationLevel = (educationLevel: string):string => educationLevels[educationLevel]

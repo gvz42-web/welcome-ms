@@ -17,12 +17,108 @@ model students {
   education_level students_education_level?
   group_name      String?                   @db.TinyText
   year            Int?                      @db.TinyInt
+  is_foreign      Boolean
   phone_number    String                    @db.TinyText
-  peer_id         Int
+  peer_id         Int                       @unique(map: "peer_id")
   created_at      DateTime                  @db.Timestamp(0)
+  black_list      black_list[]
+  students_events students_events[]
+}
+
+model events {
+  event_id             Int                @id @default(autoincrement()) @db.UnsignedInt
+  type                 String             @db.TinyText
+  title                String             @db.TinyText
+  description          String             @db.TinyText
+  date_time            DateTime           @db.DateTime(0)
+  duration             Int                @db.TinyInt
+  only_students        Boolean
+  only_russian         Boolean
+  post_link            String?            @db.TinyText
+  people_limit         Int                @db.TinyInt
+  is_registration_open Boolean
+  is_report_sent       Boolean
+  activists_events     activists_events[]
+  students_events      students_events[]
+}
+
+model students_events {
+  applyment_id      Int      @id @default(autoincrement()) @db.UnsignedInt
+  student_id        Int      @db.UnsignedInt
+  event_id          Int      @db.UnsignedInt
+  registration_date DateTime @db.DateTime(0)
+  is_approved       Boolean
+  is_visited        Boolean
+  review            String?  @db.Text
+  students          students @relation(fields: [student_id], references: [student_id], onDelete: NoAction, onUpdate: NoAction, map: "students_events_ibfk_1")
+  events            events   @relation(fields: [event_id], references: [event_id], onDelete: NoAction, onUpdate: NoAction, map: "students_events_ibfk_2")
+
+  @@index([event_id], map: "event_id")
+  @@index([student_id, event_id], map: "student_id")
+}
+
+model activists {
+  activist_id      Int                       @id @default(autoincrement()) @db.UnsignedInt
+  role             activists_role
+  tags             String?                   @db.Text
+  first_name       String                    @db.TinyText
+  last_name        String                    @db.TinyText
+  middle_name      String                    @db.TinyText
+  birth_date       DateTime                  @db.Date
+  education_level  activists_education_level
+  group_name       String                    @db.TinyText
+  year             Int                       @db.TinyInt
+  email            String                    @db.TinyText
+  phone_number     String                    @db.TinyText
+  password_hash    String?                   @db.TinyText
+  activists_events activists_events[]
+}
+
+model activists_events {
+  activity_id      Int                   @id @default(autoincrement()) @db.UnsignedInt
+  activist_id      Int                   @db.UnsignedInt
+  event_id         Int                   @db.UnsignedInt
+  role             activists_events_role
+  role_description String?               @db.TinyText
+  activists        activists             @relation(fields: [activist_id], references: [activist_id], onDelete: NoAction, onUpdate: NoAction, map: "activists_events_ibfk_1")
+  events           events                @relation(fields: [event_id], references: [event_id], onDelete: NoAction, onUpdate: NoAction, map: "activists_events_ibfk_2")
+
+  @@index([activist_id], map: "activist_id")
+  @@index([event_id], map: "event_id")
+}
+
+model black_list {
+  adding_id  Int      @id @default(autoincrement()) @db.UnsignedInt
+  student_id Int      @db.UnsignedInt
+  reason     String   @db.Text
+  until      DateTime @db.DateTime(0)
+  is_warning Boolean
+  students   students @relation(fields: [student_id], references: [student_id], onDelete: NoAction, onUpdate: NoAction, map: "black_list_ibfk_1")
+
+  @@index([student_id], map: "student_id")
 }
 
 enum students_education_level {
+  SPO
+  Spec
+  Bach
+  Mag
+  Asp
+}
+
+enum activists_role {
+  admin
+  activist
+}
+
+enum activists_events_role {
+  MAIN_ORG
+  ORG
+  ISP
+  PART
+}
+
+enum activists_education_level {
   SPO
   Spec
   Bach

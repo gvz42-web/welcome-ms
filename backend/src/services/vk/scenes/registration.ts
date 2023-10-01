@@ -2,7 +2,7 @@ import {IStepContext} from "@vk-io/scenes";
 import {educationLevels, year, yesNo} from "../keyboards";
 import {profileView, translateEducationLevel} from "../../../utils/vk.utils";
 import {Prisma} from "@prisma/client";
-import {createStudent} from "../../../controllers/student.controller";
+import {createStudent, updateStudent} from "../../../controllers/student.controller";
 
 export default [
     (context: IStepContext<any>) => {
@@ -31,7 +31,7 @@ export default [
                 keyboard: yesNo.inline()
             });
         }
-        context.scene.state.user.is_bfu_student = context.text === 'Да' ? true : false;
+        context.scene.state.user.is_bfu_student = context.text === 'Да';
         return context.scene.step.next();
     },
     (context: IStepContext<any>) => {
@@ -77,6 +77,20 @@ export default [
     },
     (context: IStepContext<any>) => {
         if (context.scene.step.firstTime || !context.text) {
+            if (context.scene.state.user.is_bfu_student) {
+                return context.send({
+                    message: 'Ты иностранный гражданин?',
+                    keyboard: yesNo.inline()
+                });
+            } else {
+                return context.scene.step.next();
+            }
+        }
+        context.scene.state.user.is_foreign = context.text === 'Да';
+        return context.scene.step.next();
+    },
+    (context: IStepContext<any>) => {
+        if (context.scene.step.firstTime || !context.text) {
             return context.send({
                 message: 'Напиши свой контактный номер телефона'
             });
@@ -96,7 +110,7 @@ export default [
         } else {
             context.send('Отлично! Теперь ты можешь записываться на наши экскурсии')
         }
-        context.scene.state.okay = context.text === 'Да' ? true : false;
+        context.scene.state.okay = context.text === 'Да';
         return context.scene.step.next();
     },
     async (context: IStepContext<any>) => {
@@ -108,8 +122,12 @@ export default [
                 ...context.scene.state.user,
                 created_at: new Date(Date.now())
             }
-            await createStudent(user)
-            return context.scene.step.next();
+            if (context.is_registrated) {
+                await updateStudent(user)
+            } else {
+                await createStudent(user)
+            }
+            return context.scene.leave().then(() => context.scene.enter('mainMenu'))
         } else {
             await context.scene.leave()
             return context.scene.enter('registration')
