@@ -1,6 +1,11 @@
 import {prisma} from "../index";
 import {Prisma} from "@prisma/client";
 
+export const getAllEvents = async ()=> {
+    const events = await prisma.events.findMany()
+    return events;
+}
+
 export const createEvent = async (data:Prisma.eventsCreateInput) => {
     await prisma.events.create({
         data

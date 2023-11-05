@@ -1,0 +1,78 @@
+/* Colors */
+$primary: #4192d7
+$secondary: #E4A79D
+$waiting: #c99537
+$light-bg: #dae7e8
+$dark: #484848
+$light-grey: #dcdcdc
+$dark-grey: #727272
+
+/* Sizes */
+$template-border-radius: 4rem
+$item-border-radius: 2.6rem
+$button-border-radius: 2rem
+
+/* Animations */
+@keyframes slide-out
+  0%
+    display: block
+    opacity: 1
+    transform: translateY(0) scaleY(1)
+  99%
+    opacity: 0
+    transform: translateY(-50%) scaleY(0)
+  100%
+    display: none
+
+@keyframes slide-in
+  0%
+    display: block
+    opacity: 0
+    transform: translateY(-50%) scaleY(0)
+  100%
+    opacity: 1
+    transform: translateY(0) scaleY(1)
+
+/* Mixins */
+@mixin template-shadow
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.11)
+
+@mixin item-shadow
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.11)
+
+@mixin item-hover
+  transition: transform 0.2s ease
+  &:hover
+    box-shadow: 0 0 20px rgba(0,0,0,0.1)
+    transform: scale(1.06)
+
+@mixin flex-center
+  display: flex
+  align-items: center
+  justify-content: center
+
+@mixin flex-space-between
+  display: flex
+  align-items: center
+  justify-content: space-between
+
+@mixin template-item
+  @include template-shadow
+  margin: 1.6rem
+  border-radius: $template-border-radius
+  padding: 2.4rem 3rem
+  background-color: #fff
+
+@mixin circle($size)
+  width: $size
+  height: $size
+  border-radius: 50%
+
+@mixin slide-animation
+  animation-name: slide-out
+  animation-duration: 0.3s
+  opacity: 0
+
+  &.open, &.active
+    animation-name: slide-in
+    opacity: 1
