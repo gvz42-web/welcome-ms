@@ -6,6 +6,30 @@ export const getAllEvents = async ()=> {
     return events;
 }
 
+export const getEventFull = async (id: string) => {
+    const event = await prisma.events.findUnique({
+        where: {
+            event_id: Number(id)
+        }
+    })
+    const studentsApply = await prisma.students_events.findMany({
+        where: {
+            event_id: Number(id)
+        }
+    })
+    const students = await prisma.students.findMany({
+        where: {
+            OR: [
+                ...studentsApply.map(e => ({student_id: e.student_id}))
+            ]
+        }
+    })
+    return {
+        ...event,
+        students
+    }
+}
+
 export const createEvent = async (data:Prisma.eventsCreateInput) => {
     await prisma.events.create({
         data

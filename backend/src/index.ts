@@ -1,13 +1,11 @@
 import {vk} from "./services/vk";
 import { PrismaClient } from "@prisma/client";
-import express, {NextFunction} from "express";
+import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import {studentsRouter} from "./routes/students.route";
 import cors from 'cors'
 import {eventsRouter} from "./routes/events.route";
 
-// Add a list of allowed origins.
-// If you have more origins you would like to add, you can add them to the array below.
 const allowedOrigins = ['http://localhost:3000'];
 
 const options: cors.CorsOptions = {
@@ -36,14 +34,12 @@ async function main(){
     app.use('/events', eventsRouter)
 
 
-    /* Error handler middleware */
-    // app.use((err, req, res, next)=> {
-    //     const statusCode = err.statusCode || 500;
-    //     console.error(err.message, err.stack);
-    //     res.status(statusCode).json({'message': err.message});
-    //
-    //     return;
-    // });
+     app.use((err: any, req: Request, res: Response)=> {
+         const statusCode = err.statusCode || 500;
+         console.error(err.message, err.stack);
+         res.status(statusCode).json({'message': err.message});
+         return;
+    });
 
     app.listen(port, '0.0.0.0', () => {
         console.log(`Example app listening at http://localhost:${port}`)

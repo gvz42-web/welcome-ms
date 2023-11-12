@@ -56,6 +56,16 @@ const columns = [
 
       </div>
     </div>
+
+    <div class="student__info">
+      <template v-if="student.is_bfu_student">
+        <div class="student__info__year">Курс: {{ student.year }}</div>
+        <div class="student__info__group">Направление: {{ student.group_name }} ({{ student.education_level }})</div>
+      </template>
+      <div class="student__info__birth-date">Дата рождения: {{ student.birth_date }}</div>
+      <div class="student__info__birth-date" v-if="student.is_foreign">Иностранный гражданин</div>
+    </div>
+
     <div class="dashboard">
       <div class="dashboard__item visited">
         <div class="number">
@@ -77,7 +87,7 @@ const columns = [
       </div>
     </div>
 
-      <div class="table">
+    <div class="table">
         <UTable :columns="columns" :rows="student.events" :loading="pending" >
           <template #date_time-data="{ row }">
             <Date :date="row.date_time" />
@@ -98,7 +108,6 @@ const columns = [
   &__header
     @include flex-space-between
 
-
   &__contact
     display: flex
     gap: 20px
@@ -108,6 +117,9 @@ const columns = [
       padding: 0.8rem 2rem 1.2rem
       color: white
       border-radius: $button-border-radius
+
+  &__info
+    @include template-item
 
   &__name
     font-size: 4.2rem

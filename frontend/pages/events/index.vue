@@ -17,7 +17,6 @@ const {
 
 <template>
   <div class="events">
-    {{events}}
     <div class="events__list">
       <EventCard v-for="event in events" :event="event"/>
     </div>

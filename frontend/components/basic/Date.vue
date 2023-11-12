@@ -3,6 +3,10 @@ const props = defineProps({
   date: {
     type: [Date, String],
     required: true
+  },
+  showTime: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -16,7 +20,13 @@ const date = computed(() => {
     date = props.date
   }
 
-  return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`
+  let dateString = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`
+
+  if (props.showTime) {
+    dateString += ` ${date.getHours()}:${date.getMinutes()}`
+  }
+
+  return dateString
 })
 
 </script>

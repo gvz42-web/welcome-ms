@@ -29,6 +29,29 @@ class EventsModule extends FetchFactory<IEvent[]> {
             asyncDataOptions
         )
     }
+
+    async getEvent(
+        id: number,
+        asyncDataOptions?: AsyncDataOptions<IEvent[]>
+    ) {
+
+        return useAsyncData(
+            () => {
+                const fetchOptions: FetchOptions<'json'> = {
+                    headers: {
+
+                    }
+                };
+                return this.call(
+                    'GET',
+                    `${this.RESOURCE}/${id}`,
+                    undefined, // body
+                    fetchOptions
+                )
+            },
+            asyncDataOptions
+        )
+    }
 }
 
 export default EventsModule;
