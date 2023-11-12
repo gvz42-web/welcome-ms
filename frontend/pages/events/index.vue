@@ -13,6 +13,10 @@ const {
   pending: boolean,
   error: any
 } = await $api.events.getAllEvents({lazy: true})
+
+const createEvent = async () => {
+  await navigateTo("/events/create")
+}
 </script>
 
 <template>
@@ -20,7 +24,7 @@ const {
     <div class="events__list">
       <EventCard v-for="event in events" :event="event"/>
     </div>
-    <ButtonMain text="Создать" icon="sign-plus-bold" class="button-bottom"/>
+    <ButtonMain text="Создать" icon="sign-plus-bold" class="button-bottom" @click="createEvent"/>
   </div>
 </template>
 

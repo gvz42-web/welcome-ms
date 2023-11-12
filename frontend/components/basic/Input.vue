@@ -10,6 +10,10 @@ const props = defineProps({
     type: [String, Number],
     default: "",
   },
+  type: {
+    type: String,
+    default: 'text'
+  }
 })
 
 const updateInput = (event) => {
@@ -18,7 +22,8 @@ const updateInput = (event) => {
 </script>
 
 <template>
-  <input type="text" :placeholder="placeholder" @input="updateInput">
+    <textarea :placeholder="placeholder" @input="updateInput" v-if="props.type == 'textarea'"></textarea>
+    <input v-else :type="props.type" :placeholder="placeholder" @input="updateInput">
 </template>
 
 <style scoped lang="sass">
@@ -33,4 +38,10 @@ input
     border: 2px solid $primary
     outline: none
     box-shadow: 0 0 5px opacify($primary, 0.1)
+
+textarea
+  width: 100%
+  border-radius: 2rem
+  padding: 1.2rem 2rem
+  border: 2px solid $light-grey
 </style>
